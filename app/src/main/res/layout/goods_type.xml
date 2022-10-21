@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@drawable/white_radius_bg"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp">
+    <RadioGroup
+        android:id="@+id/mGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/mIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收入"/>
+        <RadioButton
+            android:id="@+id/mPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="支出"/>
+    </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

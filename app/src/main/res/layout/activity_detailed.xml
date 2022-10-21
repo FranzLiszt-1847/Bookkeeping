@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetailedActivity"
+    android:background="#ECECEC"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+        <include layout="@layout/titlebar2"/>
+    </LinearLayout>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:background="@drawable/white_radius_bg"
+       android:padding="10dp"
+       android:orientation="vertical"
+       android:layout_marginTop="20dp"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="10dp">
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="折线概览"
+           android:textSize="18sp"
+           android:textColor="#000000"
+           android:textStyle="bold"/>
+       <com.franzliszt.newbookkeeping.AAChartCoreLib.AAChartCreator.AAChartView
+           android:id="@+id/LineChartView"
+           android:layout_width="wrap_content"
+           android:layout_height="200dp"
+           android:layout_marginTop="10dp"/>
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/white_radius_bg"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="南丁格尔玫瑰概览"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"/>
+        <com.franzliszt.newbookkeeping.AAChartCoreLib.AAChartCreator.AAChartView
+            android:id="@+id/mapChartView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.dashboard.GeneralFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECECEC"
+    android:orientation="vertical"
+    tools:ignore="ScrollViewCount">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+        <include layout="@layout/titlebar2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/payItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="共计1笔  合计"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/paySum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¥2999.00"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_radius_bg"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分类"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/PayTypeRecycler"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_radius_bg"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="排行"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RankRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+</LinearLayout>
+</LinearLayout>
+</ScrollView>

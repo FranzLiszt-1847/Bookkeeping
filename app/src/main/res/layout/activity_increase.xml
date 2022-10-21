@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECECEC">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/titlebar2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_radius_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_date" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="left"
+                        android:text="日期"
+                        android:textColor="#000000"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/SelectDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="left"
+                        android:text="2022年6月10日 星期五"
+                        android:textColor="#2196F3"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="right">
+
+                    <Switch
+                        android:id="@+id/DateSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:thumb="@drawable/thumb"
+                        android:track="@drawable/track" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/DateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/calendar_item" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E4E1E1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_radius_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_time" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="left"
+                            android:text="时间"
+                            android:textColor="#000000"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/SelectTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="left"
+                            android:text="12:00"
+                            android:textColor="#2196F3"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="right">
+
+                        <Switch
+                            android:id="@+id/TimeSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:thumb="@drawable/thumb"
+                            android:track="@drawable/track" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/TimeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include layout="@layout/time_item" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:background="@drawable/white_radius_bg"
+          android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_type" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="类型"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:onClick="SelectType">
+
+          <TextView
+              android:id="@+id/TypeText"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginRight="5dp"
+              android:gravity="center"
+              android:text="支出or收入"
+              android:textColor="#2196F3"
+              android:textSize="12sp" />
+
+          <ImageView
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:src="@drawable/icon_right_c" />
+        </LinearLayout>
+      </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/white_radius_bg"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_lable" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="标签"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="right"
+                    android:onClick="SelectLabel">
+
+                    <TextView
+                        android:id="@+id/TextLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:text="暂未选择"
+                        android:textColor="#2196F3"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/icon_right_c" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:background="@drawable/white_radius_bg">
+
+                <EditText
+                    android:id="@+id/GoodsName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="4"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="请输入商品信息；例如:麻辣小龙虾拌面"
+                    android:singleLine="true"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right">
+
+                    <ImageView
+                        android:id="@+id/NameDelete"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:onClick="ClearText"
+                        android:scaleType="center"
+                        android:src="@drawable/icon_delete" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/NameNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:text="0" />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:layout_marginTop="10dp"
+          android:orientation="horizontal"
+          android:background="@drawable/white_radius_bg">
+
+        <EditText
+            android:id="@+id/GoodsPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="4"
+            android:background="@null"
+            android:ellipsize="end"
+            android:hint="请输入商品价格；例如: 29.99"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:inputType="numberDecimal"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right">
+
+          <ImageView
+              android:id="@+id/PriceDelete"
+              android:layout_width="30dp"
+              android:layout_height="30dp"
+              android:onClick="ClearText"
+              android:scaleType="center"
+              android:src="@drawable/icon_delete" />
+        </LinearLayout>
+      </LinearLayout>
+
+      <TextView
+          android:id="@+id/PriceNum"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:layout_marginTop="5dp"
+          android:layout_marginRight="10dp"
+          android:gravity="right"
+          android:text="0" />
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

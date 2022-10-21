@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--旋转中心距离view的左顶点50%，旋转中心距离view的上顶点50%
+    0-359度旋转，360度会出现卡顿-->
+<rotate
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:fromDegrees="0"
+    android:toDegrees="359"
+    android:duration="500"
+    />
+
+</set>
