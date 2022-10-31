@@ -130,7 +130,7 @@ public class DetailedActivity extends AppCompatActivity {
         return o_price;
     }
     private String[] getTitles(){
-        if (recordList.size() == 0 || recordList == null)return null;
+        if (recordList == null || recordList.size() == 0)return null;
         String[] title = new String[recordList.size()];
         for (int i = 0; i < recordList.size(); i++) {
             /**截取商品名称前7个字符*/

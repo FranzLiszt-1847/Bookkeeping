@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
      * 获取RecyclerView数据源*/
     private void getData(){
         recordList = dao.QueryAll();
-        if (recordList.size() == 0 || recordList == null){
+        if (recordList == null || recordList.size() == 0){
             IsEmpty(true);
             return;
         }

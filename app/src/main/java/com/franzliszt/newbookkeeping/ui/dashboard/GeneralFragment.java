@@ -113,7 +113,7 @@ public class GeneralFragment extends Fragment {
     /**
      * 选出账单支出前三甲*/
     private void getRankings(){
-        if (recordList.size() == 0 || recordList == null)return;
+        if (recordList == null || recordList.size() == 0)return;
         double maxPrice = -32768,midPrice = -32768,lowPrice = -32768;
         int maxIndex = -1,midIndex = -1,lowIndex = -1;
         for (int i = 0; i < recordList.size(); i++) {
