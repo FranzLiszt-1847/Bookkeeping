@@ -75,9 +75,13 @@ public class GeneralFragment extends Fragment {
 
         RankRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
         RankRecycler.setAdapter(new RankAdapter(rankListList));
-
-        PayItem.setText("共计"+recordList.size()+"笔  合计");
-        PaySum.setText("¥"+SaveDecimal(TotalPrice));
+        if (recordList == null || recordList.size() == 0){
+            PayItem.setText("共计0笔  合计");
+            PaySum.setText("¥0.00");
+        }else {
+            PayItem.setText("共计"+recordList.size()+"笔  合计");
+            PaySum.setText("¥"+SaveDecimal(TotalPrice));
+        }
     }
     /*
     * toatl:2030.99*/
@@ -98,7 +102,7 @@ public class GeneralFragment extends Fragment {
     /**
      * 获取单个标签总价以及所有商品总价*/
     private void getPrice(){
-        if (recordList.size() == 0 || recordList == null)return;
+        if (recordList == null || recordList.size() == 0)return;
         d_price = new double[s_select.length];
         for (int i = 0; i < recordList.size(); i++) {
             for (int j = 0; j < s_select.length; j++) {

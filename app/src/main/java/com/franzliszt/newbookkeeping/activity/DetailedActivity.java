@@ -98,7 +98,7 @@ public class DetailedActivity extends AppCompatActivity {
     /**
      * 折线图数据源x*/
     private Object[] getPrice(){
-        if (recordList.size() == 0 || recordList == null)return null;
+        if (recordList == null || recordList.size() == 0)return null;
         double[] d_price = new double[s_select.length];
         Object[] o_price = new Object[s_select.length];
         for (int i = 0; i < recordList.size(); i++) {
@@ -118,7 +118,7 @@ public class DetailedActivity extends AppCompatActivity {
     /**
      * 南丁格尔玫瑰图数据源x*/
     private Object[] getRosePrice(){
-        if (recordList.size() == 0 || recordList == null)return null;
+        if (recordList == null || recordList.size() == 0)return null;
         double[] d_price = new double[recordList.size()];
         Object[] o_price = new Object[recordList.size()];
         for (int i = 0; i < recordList.size(); i++) {
