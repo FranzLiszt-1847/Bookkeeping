@@ -25,13 +25,13 @@ public class DateUtils {
     /*时间戳转换成字符窜*/
     public static String getLongToString(long time) {
         Date d = new Date(time);
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        mSimpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault());
         return mSimpleDateFormat.format(d);
     }
 
     /*将字符串转为时间戳*/
     public static long getStringToLong(String time) {
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        mSimpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault());
         Date date = new Date();
         try {
             date = mSimpleDateFormat.parse(time);
@@ -43,7 +43,7 @@ public class DateUtils {
     }
 
     public static Date getStringToDate(String str){
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        mSimpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault());
         try {
             Date date = mSimpleDateFormat.parse(str);
             return date;

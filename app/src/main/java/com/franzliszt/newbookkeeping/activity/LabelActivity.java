@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.franzliszt.newbookkeeping.R;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
+
 import com.franzliszt.newbookkeeping.utils.SP;
 import com.franzliszt.newbookkeeping.utils.StatusBarUtils;
 import com.franzliszt.newbookkeeping.utils.ToastUtils;
@@ -58,7 +58,6 @@ public class LabelActivity extends AppCompatActivity {
         type_8 = findViewById(R.id.type_8);
 
         toastUtils = new ToastUtils(LabelActivity.this);
-        KillProcess.PUSH(LabelActivity.class,LabelActivity.this);
     }
     private void setBG(LinearLayout layout,int index){
         int tag = (int)layout.getTag();
@@ -142,7 +141,8 @@ public class LabelActivity extends AppCompatActivity {
         }
     }
     public void ExitEdit(View view){
-        KillProcess.POP(LabelActivity.this);
+        //KillProcess.POP(LabelActivity.this);
+        finish();
     }
     public void SaveMessage(View view){
         if (TotalNum > 1){
@@ -153,10 +153,8 @@ public class LabelActivity extends AppCompatActivity {
             toastUtils.ShowSuccess("success");
             String tag = selectTag();
             Log.d(TAG,"TAG="+tag);
-            SP sp = SP.getInstance();
-            sp.PutData(LabelActivity.this,"Label",tag);
-            //EventBus.getDefault().post(new TextClass(tag));
-            KillProcess.POP(LabelActivity.this);
+            SP.getInstance().PutData(LabelActivity.this,"Label",tag);
+            finish();
         }
     }
 }

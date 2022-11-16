@@ -14,7 +14,7 @@ import com.franzliszt.newbookkeeping.R;
 import com.franzliszt.newbookkeeping.adapter.OrderAdapter;
 import com.franzliszt.newbookkeeping.sql.Dao;
 import com.franzliszt.newbookkeeping.sql.Record;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
+
 import com.franzliszt.newbookkeeping.utils.StatusBarUtils;
 
 import java.util.ArrayList;
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         OrderRecycler = findViewById(R.id.OrderRecycler);
         TotalPay = findViewById(R.id.TotalPay);
         TotalIncome = findViewById(R.id.TotalIncome);
-        KillProcess.PUSH(MainActivity.class,MainActivity.this);
         dao = new Dao(this);
     }
     private void InitRecycler(){
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void Exit(View view){
-        KillProcess.POP(MainActivity.this);
+        finish();
     }
 
     public void Increase(View view){

@@ -17,7 +17,6 @@ import com.franzliszt.newbookkeeping.R;
 import com.franzliszt.newbookkeeping.base.ViewBar;
 import com.franzliszt.newbookkeeping.sql.Dao;
 import com.franzliszt.newbookkeeping.sql.Record;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
 import com.franzliszt.newbookkeeping.utils.StatusBarUtils;
 
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ public class DetailedActivity extends AppCompatActivity {
         TextView save = findViewById(R.id.BtnSave);
         save.setVisibility(View.INVISIBLE);
 
-        KillProcess.PUSH(DetailedActivity.class,this);
     }
     private  AAChartModel InitLineChart() {
         return new AAChartModel()
@@ -143,6 +141,6 @@ public class DetailedActivity extends AppCompatActivity {
         return title;
     }
     public void ExitEdit(View view){
-        KillProcess.POP(this);
+       finish();
     }
 }

@@ -7,7 +7,7 @@ import com.franzliszt.newbookkeeping.R;
 import com.franzliszt.newbookkeeping.ui.dashboard.GeneralFragment;
 import com.franzliszt.newbookkeeping.ui.record.RecordFragment;
 import com.franzliszt.newbookkeeping.adapter.BottomAdapter;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
+
 import com.franzliszt.newbookkeeping.utils.StatusBarUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,7 +30,7 @@ public class NavActivity extends AppCompatActivity {
     private void InitView(){
         navView = findViewById(R.id.navView);
         mViewPager = findViewById(R.id.mViewPager);
-        KillProcess.PUSH(NavActivity.class,this);
+        mViewPager.setOffscreenPageLimit(2);
     }
     private void NavListener(){
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

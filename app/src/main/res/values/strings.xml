@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">孙正义的记账本</string>
+    <string name="app_name">花不完的钱</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="title_record">账单</string>
     <string name="title_general">概览</string>

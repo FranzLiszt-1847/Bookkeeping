@@ -20,10 +20,15 @@ import com.franzliszt.newbookkeeping.activity.DetailedActivity;
 import com.franzliszt.newbookkeeping.adapter.BarAdapter;
 import com.franzliszt.newbookkeeping.adapter.RankAdapter;
 import com.franzliszt.newbookkeeping.base.RankList;
+import com.franzliszt.newbookkeeping.base.UpdateBean;
 import com.franzliszt.newbookkeeping.base.ViewBar;
 import com.franzliszt.newbookkeeping.sql.Dao;
 import com.franzliszt.newbookkeeping.sql.Record;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
+
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,29 +37,33 @@ import java.util.Objects;
 public class GeneralFragment extends Fragment {
     private View root;
     private LinearLayout Exit;
-    private RecyclerView PayTypeRecycler,RankRecycler;
-    private TextView Save,PayItem,PaySum;
+    private RecyclerView PayTypeRecycler, RankRecycler;
+    private TextView Save, PayItem, PaySum;
+
     private List<Record> recordList = new ArrayList<>();
     private List<ViewBar> barList = new ArrayList<>();
     private List<RankList> rankListList = new ArrayList<>();
+    private BarAdapter barAdapter;
+    private RankAdapter rankAdapter;
+
+
     private Dao dao;
-    private String[] s_select = {"日用百货","文化休闲","交通出行","生活服务","服装装扮","餐饮美食","数码电器","其他标签"};
+    private String[] s_select = {"日用百货", "文化休闲", "交通出行", "生活服务", "服装装扮", "餐饮美食", "数码电器", "其他标签"};
     private double[] d_price;
     private double TotalPrice = 0;
     private WindowManager manager;
     private int width = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         root = inflater.inflate(R.layout.fragment_general, container, false);
+        root = inflater.inflate(R.layout.fragment_general, container, false);
         Init();
-        Listener();
-        getPrice();
-        getData();
-        getRankings();
         InitRecycler();
+        loadData();
+        Listener();
         return root;
     }
-    private void Init(){
+
+    private void Init() {
         Exit = root.findViewById(R.id.BtnExit);
         Save = root.findViewById(R.id.BtnSave);
         PayTypeRecycler = root.findViewById(R.id.PayTypeRecycler);
@@ -69,44 +78,60 @@ public class GeneralFragment extends Fragment {
         manager = requireActivity().getWindowManager();
         width = manager.getDefaultDisplay().getWidth();
     }
-    private void InitRecycler(){
+
+    private void InitRecycler() {
         PayTypeRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        PayTypeRecycler.setAdapter(new BarAdapter(barList));
+        barAdapter = new BarAdapter(barList);
+        PayTypeRecycler.setAdapter(barAdapter);
 
         RankRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        RankRecycler.setAdapter(new RankAdapter(rankListList));
-        if (recordList == null || recordList.size() == 0){
+        rankAdapter = new RankAdapter(rankListList);
+        RankRecycler.setAdapter(rankAdapter);
+    }
+
+    private void loadData(){
+        getPrice();
+        getData();
+        getRankings();
+
+        if (recordList == null || recordList.size() == 0) {
             PayItem.setText("共计0笔  合计");
             PaySum.setText("¥0.00");
-        }else {
-            PayItem.setText("共计"+recordList.size()+"笔  合计");
-            PaySum.setText("¥"+SaveDecimal(TotalPrice));
+        } else {
+            PayItem.setText("共计" + recordList.size() + "笔  合计");
+            PaySum.setText("¥" + SaveDecimal(TotalPrice));
         }
     }
+
     /*
-    * toatl:2030.99*/
-    private void getData(){
-        if (TotalPrice <= 0)return;
+     * toatl:2030.99*/
+    private void getData() {
+        if (TotalPrice <= 0) return;
         for (int i = 0; i < d_price.length; i++) {
-            if (d_price[i] == 0)continue;
+            if (d_price[i] == 0) continue;
             int n = (int) (d_price[i] / TotalPrice * width);
             double t = SaveDecimal(d_price[i] / TotalPrice * 100);
-            barList.add(new ViewBar(s_select[i]+"   ",t+"%","¥"+d_price[i],n,10));
+            barList.add(new ViewBar(s_select[i] + "   ", t + "%", "¥" + d_price[i], n, 10));
         }
+       barAdapter.notifyDataSetChanged();
     }
+
     /**
-     * 保留2位小数*/
-    private double SaveDecimal(double n){
-        return n = ((int)(n*100))/100.0;
+     * 保留2位小数
+     */
+    private double SaveDecimal(double n) {
+        return n = ((int) (n * 100)) / 100.0;
     }
+
     /**
-     * 获取单个标签总价以及所有商品总价*/
-    private void getPrice(){
-        if (recordList == null || recordList.size() == 0)return;
+     * 获取单个标签总价以及所有商品总价
+     */
+    private void getPrice() {
+        if (recordList == null || recordList.size() == 0) return;
         d_price = new double[s_select.length];
         for (int i = 0; i < recordList.size(); i++) {
             for (int j = 0; j < s_select.length; j++) {
-                if (recordList.get(i).getLabel().equals(s_select[j])){
+                if (recordList.get(i).getLabel().equals(s_select[j])) {
                     d_price[j] += Double.parseDouble(recordList.get(i).getGoodsPrice());
                     TotalPrice += Double.parseDouble(recordList.get(i).getGoodsPrice());
                     break;
@@ -114,15 +139,17 @@ public class GeneralFragment extends Fragment {
             }
         }
     }
+
     /**
-     * 选出账单支出前三甲*/
-    private void getRankings(){
-        if (recordList == null || recordList.size() == 0)return;
-        double maxPrice = -32768,midPrice = -32768,lowPrice = -32768;
-        int maxIndex = -1,midIndex = -1,lowIndex = -1;
+     * 选出账单支出前三甲
+     */
+    private void getRankings() {
+        if (recordList == null || recordList.size() == 0) return;
+        double maxPrice = -32768, midPrice = -32768, lowPrice = -32768;
+        int maxIndex = -1, midIndex = -1, lowIndex = -1;
         for (int i = 0; i < recordList.size(); i++) {
             double price = Double.parseDouble(recordList.get(i).getGoodsPrice());
-            if ( price > maxPrice){
+            if (price > maxPrice) {
                 lowPrice = midPrice;
                 lowIndex = midIndex;
 
@@ -132,36 +159,39 @@ public class GeneralFragment extends Fragment {
                 maxPrice = price;
                 maxIndex = i;
             }
-            if (price < maxPrice && price > midPrice){
+            if (price < maxPrice && price > midPrice) {
                 lowPrice = midPrice;
                 lowIndex = midIndex;
 
                 midPrice = price;
                 midIndex = i;
             }
-            if (price < maxPrice && price < midPrice && price > lowPrice){
+            if (price < maxPrice && price < midPrice && price > lowPrice) {
                 lowPrice = price;
                 lowIndex = i;
             }
         }
-        int[] poi = {maxIndex,midIndex,lowIndex};
+        int[] poi = {maxIndex, midIndex, lowIndex};
         for (int i = 0; i < 3; i++) {
-            if (poi[i] == -1)continue;
-            rankListList.add(new RankList(i+1,recordList.get(poi[i]).getLabel(),recordList.get(poi[i]).getGoodsName(),recordList.get(poi[i]).getGoodsPrice(),recordList.get(poi[i]).getType()));
+            if (poi[i] == -1) continue;
+            rankListList.add(new RankList(i + 1, recordList.get(poi[i]).getLabel(), recordList.get(poi[i]).getGoodsName(), recordList.get(poi[i]).getGoodsPrice(), recordList.get(poi[i]).getType()));
         }
+        rankAdapter.notifyDataSetChanged();
     }
-    private void Listener(){
+
+    private void Listener() {
         TextListener listener = new TextListener();
         Exit.setOnClickListener(listener);
         Save.setOnClickListener(listener);
     }
-    class TextListener implements View.OnClickListener{
+
+    class TextListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.BtnExit:
-                    KillProcess.POP(getActivity());
+                    getActivity().finish();
                     break;
                 case R.id.BtnSave:
                     ReturnActivity(DetailedActivity.class);
@@ -169,7 +199,34 @@ public class GeneralFragment extends Fragment {
             }
         }
     }
- private void ReturnActivity(Class activity){
-        startActivity(new Intent(getActivity(),activity));
- }
+
+    private void ReturnActivity(Class activity) {
+        startActivity(new Intent(getActivity(), activity));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void onEvent(UpdateBean bean){
+        if (recordList == null){
+            recordList = new ArrayList<>();
+        }
+        recordList.clear();
+        barList.clear();
+        rankListList.clear();
+        recordList = dao.QueryAll();
+        loadData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

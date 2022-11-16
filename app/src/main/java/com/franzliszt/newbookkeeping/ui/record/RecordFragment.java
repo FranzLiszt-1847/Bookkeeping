@@ -18,10 +18,15 @@ import com.franzliszt.newbookkeeping.R;
 import com.franzliszt.newbookkeeping.activity.DetailedActivity;
 import com.franzliszt.newbookkeeping.activity.IncreaseActivity;
 import com.franzliszt.newbookkeeping.adapter.OrderAdapter;
+import com.franzliszt.newbookkeeping.base.UpdateBean;
 import com.franzliszt.newbookkeeping.sql.Dao;
 import com.franzliszt.newbookkeeping.sql.Record;
 import com.franzliszt.newbookkeeping.ui.dashboard.GeneralFragment;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
+
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +34,18 @@ import java.util.List;
 public class RecordFragment extends Fragment {
     private View root;
     private LinearLayout OrderNull,bottomView,RecordExit,RecordAdd;
-    private View view = null;
     private RecyclerView OrderRecycler;
     private TextView TotalPay,TotalIncome;
     private List<Record> recordList = new ArrayList<>();
+    private OrderAdapter adapter;
     private Dao dao;
     private double totalPay = 0,totalIncome = 0;
-    private Context context;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          root = inflater.inflate(R.layout.activity_main, container, false);
         InitView();
-        getData();
         InitRecycler();
+        getData();
         Listener();
         return root;
     }
@@ -53,20 +57,22 @@ public class RecordFragment extends Fragment {
         RecordExit = root.findViewById(R.id.RecordExit);
         RecordAdd = root.findViewById(R.id.RecordAdd);
         TotalIncome = root.findViewById(R.id.TotalIncome);
-        dao = new Dao(root.getContext());
+        dao = new Dao(getContext());
     }
     private void InitRecycler(){
-        OrderRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        OrderRecycler.setAdapter(new OrderAdapter(recordList));
+        OrderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new OrderAdapter(recordList);
+        OrderRecycler.setAdapter(adapter);
     }
     /**
      * 获取RecyclerView数据源*/
     private void getData(){
-        recordList = dao.QueryAll();
-        if (recordList == null || recordList.size() == 0){
+        if (dao.QueryAll() == null){
             IsEmpty(true);
             return;
         }
+        IsEmpty(false);
+        recordList.addAll(dao.QueryAll());
         for (int i = 0; i < recordList.size(); i++) {
             /**
              * 1为支出
@@ -79,7 +85,7 @@ public class RecordFragment extends Fragment {
         }
         IsEmpty(TotalPay,totalPay,1);
         IsEmpty(TotalIncome,totalIncome,0);
-
+        adapter.notifyDataSetChanged();
     }
     private void IsEmpty(TextView view,double price,int flag){
         if (flag == 1 && price == 0){
@@ -119,7 +125,7 @@ public class RecordFragment extends Fragment {
                     ReturnActivity(IncreaseActivity.class);
                     break;
                 case R.id.RecordExit:
-                    KillProcess.POP(getActivity());
+                    getActivity().finish();
                     break;
             }
         }
@@ -128,5 +134,24 @@ public class RecordFragment extends Fragment {
         startActivity(new Intent(root.getContext(),c));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void onEvent(UpdateBean bean){
+        recordList.clear();
+        getData();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

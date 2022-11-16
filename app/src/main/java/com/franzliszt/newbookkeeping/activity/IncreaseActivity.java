@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,18 +23,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.franzliszt.newbookkeeping.R;
+import com.franzliszt.newbookkeeping.base.UpdateBean;
 import com.franzliszt.newbookkeeping.sql.Dao;
 import com.franzliszt.newbookkeeping.sql.Record;
 import com.franzliszt.newbookkeeping.utils.DateUtils;
-import com.franzliszt.newbookkeeping.utils.KillProcess;
 import com.franzliszt.newbookkeeping.utils.PoPWindows;
 import com.franzliszt.newbookkeeping.utils.SP;
 import com.franzliszt.newbookkeeping.utils.StatusBarUtils;
 import com.franzliszt.newbookkeeping.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+
 /**
  *  支出：1
  *  收入：0*/
@@ -53,8 +53,15 @@ public class IncreaseActivity extends AppCompatActivity {
     private ToastUtils toastUtils;
     private Dao dao;
 
+    private static String _goodsTime = "GoodsTime";
+    private static String _goodsDate = "GoodsDate";
+    private static String _goodsType = "GoodsType";
+    private static String _goodsName = "GoodsName";
+    private static String _goodsPrice = "GoodsPrice";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //getViewData(savedInstanceState);
         super.onCreate(savedInstanceState);
         StatusBarUtils.setStatusBarHide(getWindow());
         StatusBarUtils.setStatusBarLightMode(getWindow());
@@ -66,6 +73,14 @@ public class IncreaseActivity extends AppCompatActivity {
         getTime();
         Receive();
         getContent();
+    }
+
+    /**
+     * 从当前activity跳转到另外一个activity时，保存当前控件数据*/
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        //saveViewData(outState);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     /**
@@ -99,9 +114,11 @@ public class IncreaseActivity extends AppCompatActivity {
         toastUtils = new ToastUtils(IncreaseActivity.this);
         dao = new Dao(IncreaseActivity.this);
 
-        KillProcess.PUSH(IncreaseActivity.class,IncreaseActivity.this);
 
         SelectTime.setText(DateUtils.getCurrentTime());
+        String date = DateUtils.getLongToString(System.currentTimeMillis());
+        String week = DateUtils.getWeekOfDate(DateUtils.getStringToDate(date));
+        SelectDate.setText(date+" "+week);
     }
 
     /**
@@ -166,12 +183,12 @@ public class IncreaseActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 month = month + 1;
                 CNDate = year + "年" + month + "月" + dayOfMonth + "日";
-                String date = year + "-" + month + "-" + dayOfMonth;
-                Log.d(TAG, "date=" + date);
-                Log.d(TAG, "CNdate=" + CNDate);
+               //String date = year + "-" + month + "-" + dayOfMonth;
+                //Log.d(TAG, "date=" + date);
+                //Log.d(TAG, "CNdate=" + CNDate);
                 //string日期转date日期，在转为星期
-                String week = DateUtils.getWeekOfDate(DateUtils.getStringToDate(date));
-                Log.d(TAG, "week=" + week);
+                String week = DateUtils.getWeekOfDate(DateUtils.getStringToDate(CNDate));
+                Log.d(TAG, "week =" + week);
                 SelectDate.setText(CNDate + " " + week);
             }
         });
@@ -263,8 +280,7 @@ public class IncreaseActivity extends AppCompatActivity {
      * 利用SharedPreferences接受来自标签页面的数据，数据由用户选择
      */
     private void Receive() {
-        SP sp = SP.getInstance();
-        String tag = (String) sp.GetData(IncreaseActivity.this, "Label", "");
+        String tag = (String) SP.getInstance().GetData(IncreaseActivity.this, "Label", "");
         if (TextUtils.isEmpty(tag)) {
             Log.d(TAG, "null");
         } else {
@@ -312,20 +328,70 @@ public class IncreaseActivity extends AppCompatActivity {
         int flag = dao.Insert(record);
         if (flag == 1){
             toastUtils.ShowSuccess("保存成功!");
+            EventBus.getDefault().postSticky(new UpdateBean(true));
+            finish();
         }else {
             toastUtils.ShowFail("保存失败!");
         }
 
     }
+
+    private void saveViewData(Bundle outState){
+        String data = SelectDate.getText().toString();
+        String time = SelectTime.getText().toString();
+        String type = TypeText.getText().toString();
+        String name = GoodsName.getText().toString();
+        String price = GoodsPrice.getText().toString();
+        if (!data.isEmpty()){
+            outState.putString(_goodsDate,data);
+        }
+        if (!time.isEmpty()){
+            outState.putString(_goodsTime,time);
+        }
+        if (!type.isEmpty()){
+            outState.putString(_goodsType,type);
+        }
+        if (!name.isEmpty()){
+            outState.putString(_goodsName,name);
+        }
+        if (!price.isEmpty()){
+            outState.putString(_goodsPrice,price);
+        }
+    }
+
+    private void getViewData(Bundle savedInstanceState){
+        if (savedInstanceState != null){
+            if (savedInstanceState.containsKey(_goodsDate)){
+                SelectDate.setText(savedInstanceState.getString(_goodsDate));
+            }
+            if (savedInstanceState.containsKey(_goodsTime)){
+                SelectTime.setText(savedInstanceState.getString(_goodsTime));
+            }
+            if (savedInstanceState.containsKey(_goodsType)){
+                TypeText.setText(savedInstanceState.getString(_goodsType));
+            }
+            if (savedInstanceState.containsKey(_goodsName)){
+                GoodsName.setText(savedInstanceState.getString(_goodsName));
+            }
+            if (savedInstanceState.containsKey(_goodsPrice)){
+                GoodsPrice.setText(savedInstanceState.getString(_goodsPrice));
+            }
+        }
+    }
     public void ExitEdit(View view){
-        KillProcess.POP(IncreaseActivity.this);
+        //KillProcess.POP(IncreaseActivity.this);
+        finish();
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Receive();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
     }
 }
