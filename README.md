@@ -1,4 +1,4 @@
-# EasyMusic
+# EasyBookkeeping
 ## 功能模块
 EasyBookkeeping APP实现如下功能:
 - 新建记录
