@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -93,7 +94,10 @@ public class GeneralFragment extends Fragment {
         getPrice();
         getData();
         getRankings();
+        calculate();
+    }
 
+    private void calculate(){
         if (recordList == null || recordList.size() == 0) {
             PayItem.setText("共计0笔  合计");
             PaySum.setText("¥0.00");
@@ -110,8 +114,8 @@ public class GeneralFragment extends Fragment {
         for (int i = 0; i < d_price.length; i++) {
             if (d_price[i] == 0) continue;
             int n = (int) (d_price[i] / TotalPrice * width);
-            double t = SaveDecimal(d_price[i] / TotalPrice * 100);
-            barList.add(new ViewBar(s_select[i] + "   ", t + "%", "¥" + d_price[i], n, 10));
+            String t = SaveDecimal(d_price[i] / TotalPrice * 100) + "%";
+            barList.add(new ViewBar(s_select[i] + "   ", t, "¥" + d_price[i], n, 10));
         }
        barAdapter.notifyDataSetChanged();
     }
@@ -119,8 +123,8 @@ public class GeneralFragment extends Fragment {
     /**
      * 保留2位小数
      */
-    private double SaveDecimal(double n) {
-        return n = ((int) (n * 100)) / 100.0;
+    private String SaveDecimal(double num){
+        return new DecimalFormat("#.00").format(num);
     }
 
     /**
@@ -145,38 +149,32 @@ public class GeneralFragment extends Fragment {
      */
     private void getRankings() {
         if (recordList == null || recordList.size() == 0) return;
-        double maxPrice = -32768, midPrice = -32768, lowPrice = -32768;
-        int maxIndex = -1, midIndex = -1, lowIndex = -1;
-        for (int i = 0; i < recordList.size(); i++) {
-            double price = Double.parseDouble(recordList.get(i).getGoodsPrice());
-            if (price > maxPrice) {
-                lowPrice = midPrice;
-                lowIndex = midIndex;
-
-                midPrice = maxPrice;
-                midIndex = maxIndex;
-
-                maxPrice = price;
-                maxIndex = i;
-            }
-            if (price < maxPrice && price > midPrice) {
-                lowPrice = midPrice;
-                lowIndex = midIndex;
-
-                midPrice = price;
-                midIndex = i;
-            }
-            if (price < maxPrice && price < midPrice && price > lowPrice) {
-                lowPrice = price;
-                lowIndex = i;
-            }
+        sort();
+        int size = 0;
+        if (recordList.size() < 3){
+            size = recordList.size();
         }
-        int[] poi = {maxIndex, midIndex, lowIndex};
-        for (int i = 0; i < 3; i++) {
-            if (poi[i] == -1) continue;
-            rankListList.add(new RankList(i + 1, recordList.get(poi[i]).getLabel(), recordList.get(poi[i]).getGoodsName(), recordList.get(poi[i]).getGoodsPrice(), recordList.get(poi[i]).getType()));
+        for (int i = 0; i < size; i++) {
+            rankListList.add(new RankList(i + 1, recordList.get(i).getLabel(), recordList.get(i).getGoodsName(), recordList.get(i).getGoodsPrice(), recordList.get(i).getType()));
         }
         rankAdapter.notifyDataSetChanged();
+    }
+
+    private void sort(){
+        if (recordList.size() <= 1)return;
+        for (int i = 0; i < recordList.size() - 1; i++) {
+            int index = i;
+            for (int j = i+1; j < recordList.size(); j++) {
+                if (Double.parseDouble(recordList.get(index).getGoodsPrice()) < Double.parseDouble(recordList.get(j).getGoodsPrice())){
+                    index = j;
+                }
+            }
+            if (i != index){
+                Record record = recordList.get(index);
+                recordList.set(index,recordList.get(i));
+                recordList.set(i,record);
+            }
+        }
     }
 
     private void Listener() {
@@ -212,6 +210,7 @@ public class GeneralFragment extends Fragment {
         recordList.clear();
         barList.clear();
         rankListList.clear();
+        TotalPrice = 0;
         recordList = dao.QueryAll();
         loadData();
     }

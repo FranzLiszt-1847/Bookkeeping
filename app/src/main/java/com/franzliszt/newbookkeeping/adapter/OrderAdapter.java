@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,10 @@ import com.franzliszt.newbookkeeping.sql.Record;
 
 import java.util.List;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+import cn.we.swipe.helper.WeSwipeHelper;
+import cn.we.swipe.helper.WeSwipeProxyAdapter;
+
+public class OrderAdapter extends WeSwipeProxyAdapter<OrderAdapter.ViewHolder> implements View.OnClickListener {
     private String[] s_select = {"日用百货","文化休闲","交通出行","生活服务","服装装扮","餐饮美食","数码电器","其他标签"};
     private int[] img_select = {
             R.drawable.icon_type_one,
@@ -27,6 +31,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             R.drawable.icon_type_seven,
             R.drawable.icon_type_eight};
     private List<Record> recordList;
+    private onDeleteListener listener;
     public OrderAdapter(List<Record> recordList){
         this.recordList = recordList;
     }
@@ -41,6 +46,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Record record = recordList.get(position);
+
+        holder.item_delete.setOnClickListener(this);
+        holder.item_delete.setTag(position);
+
         holder.item_date.setText(record.getDate());
         holder.item_time.setText("时间 "+record.getTime());
         holder.item_label.setText("["+record.getLabel()+"]");
@@ -64,9 +73,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         return recordList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView item_date,item_time,item_label,item_name,item_price;
+    @Override
+    public void onClick(View v) {
+        if (listener != null){
+            int pos = (int)v.getTag();
+            listener.onClickListener(pos,recordList.get(pos));
+        }
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements WeSwipeHelper.SwipeLayoutTypeCallBack {
+        private TextView item_date,item_time,item_label,item_name,item_price,item_delete;
         private ImageView item_img;
+        private LinearLayout layout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +94,32 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             item_name = itemView.findViewById(R.id.item_name);
             item_price = itemView.findViewById(R.id.item_price);
             item_img = itemView.findViewById(R.id.item_img);
+            item_delete = itemView.findViewById(R.id.item_delete);
+            layout = itemView.findViewById(R.id.item_Layout);
+        }
+
+        @Override
+        public float getSwipeWidth() {
+            return item_delete.getWidth();
+        }
+
+        @Override
+        public View needSwipeLayout() {
+            return layout;
+        }
+
+        @Override
+        public View onScreenView() {
+            return layout;
         }
     }
+
+    public interface onDeleteListener{
+        void onClickListener(int pos,Record bean);
+    }
+
+    public void setDeleteListener(onDeleteListener listener){
+        this.listener = listener;
+    }
+
 }

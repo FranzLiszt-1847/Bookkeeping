@@ -28,8 +28,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.we.swipe.helper.WeSwipe;
+import cn.we.swipe.helper.WeSwipeHelper;
 
 public class RecordFragment extends Fragment {
     private View root;
@@ -63,6 +67,17 @@ public class RecordFragment extends Fragment {
         OrderRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new OrderAdapter(recordList);
         OrderRecycler.setAdapter(adapter);
+        WeSwipe.attach(OrderRecycler);
+
+        adapter.setDeleteListener(new OrderAdapter.onDeleteListener() {
+            @Override
+            public void onClickListener(int pos, Record bean) {
+                dao.Delete(bean.getGoodsName());
+                recordList.remove(pos);
+                adapter.notifyDataSetChanged();
+                EventBus.getDefault().postSticky(new UpdateBean(false));
+            }
+        });
     }
     /**
      * 获取RecyclerView数据源*/
@@ -87,17 +102,21 @@ public class RecordFragment extends Fragment {
         IsEmpty(TotalIncome,totalIncome,0);
         adapter.notifyDataSetChanged();
     }
+
     private void IsEmpty(TextView view,double price,int flag){
         if (flag == 1 && price == 0){
             view.setText("0.00");
         }else if (flag == 0 && price == 0){
             view.setText("0.00");
         }else {
-            view.setText(SaveDecimal(price)+"");
+            view.setText(SaveDecimal(price));
         }
     }
-    private double SaveDecimal(double n){
-        return n = ((int)(n*100))/100.0;
+
+    /**
+     * 保留一位小数*/
+    private String SaveDecimal(double num){
+        return new DecimalFormat("#.0").format(num);
     }
     /**
      * 判断数据库内容是否为空
@@ -136,8 +155,12 @@ public class RecordFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void onEvent(UpdateBean bean){
-        recordList.clear();
-        getData();
+        if (bean.getUpdate()){
+            recordList.clear();
+            totalPay = 0;
+            totalIncome = 0;
+            getData();
+        }
     }
 
     @Override

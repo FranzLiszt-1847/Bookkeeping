@@ -55,6 +55,20 @@ public class Dao {
         }
     }
 
+    public void Delete(String name) {
+        DB = helper.getReadableDatabase();
+        String selection = "Name = ?";
+        String[] selectionArgs = {name + ""};
+        if (DB.isOpen()) {
+            int count = DB.delete(Helper.TableName, selection, selectionArgs);
+            if (count > 0)
+                Log.i(TAG, "删除了: " + count + "行");
+            else
+                Log.i(TAG, "数据未删除！");
+            DB.close();
+        }
+    }
+
 
     public void Update(Record record,int id) {
         DB = helper.getReadableDatabase();
